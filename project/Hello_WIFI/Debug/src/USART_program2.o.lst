@@ -1,0 +1,457 @@
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"USART_program2.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.global	__aeabi_d2uiz
+  16              		.section	.text.USART1_voidInit,"ax",%progbits
+  17              		.align	1
+  18              		.global	USART1_voidInit
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu softvfp
+  24              	USART1_voidInit:
+  25              	.LFB0:
+  26              		.file 1 "../src/USART_program2.c"
+   1:../src/USART_program2.c **** /*****************************************************************************************/
+   2:../src/USART_program2.c **** /* Author : George Ghoubrial                                                             */
+   3:../src/USART_program2.c **** /* Date   : 26 SEP 2020                                                                  */
+   4:../src/USART_program2.c **** /* Verson : V02 for esp                                                                  */
+   5:../src/USART_program2.c **** /*****************************************************************************************/
+   6:../src/USART_program2.c **** #include "STD_TYPES.h"
+   7:../src/USART_program2.c **** #include "BIT_MATH.h"
+   8:../src/USART_program2.c **** 
+   9:../src/USART_program2.c **** #include "USART_interface.h"
+  10:../src/USART_program2.c **** #include "USART_private.h"
+  11:../src/USART_program2.c **** #include "USART_config.h"
+  12:../src/USART_program2.c **** 
+  13:../src/USART_program2.c **** #include<math.h>
+  14:../src/USART_program2.c **** 
+  15:../src/USART_program2.c **** void USART1_voidInit(void)
+  16:../src/USART_program2.c **** {
+  27              		.loc 1 16 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 08B5     		push	{r3, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 3, -8
+  34              		.cfi_offset 14, -4
+  35              	.LVL0:
+  17:../src/USART_program2.c **** 	/* put boud rate in BRR register */
+  18:../src/USART_program2.c **** 	f32 USARTDIV;
+  19:../src/USART_program2.c **** 	u16 mantissa;
+  20:../src/USART_program2.c **** 	u8 fraction;
+  21:../src/USART_program2.c **** 	
+  22:../src/USART_program2.c **** 	USARTDIV = (f32)F_CLK/(16*USART1_BOUD_RATE);
+  23:../src/USART_program2.c **** 	mantissa = (u16)USARTDIV;
+  24:../src/USART_program2.c **** 	fraction = round((USARTDIV - mantissa) * 16) ;
+  36              		.loc 1 24 0
+  37 0002 1DA1     		adr	r1, .L6
+  38 0004 D1E90001 		ldrd	r0, [r1]
+  39 0008 FFF7FEFF 		bl	round
+  40              	.LVL1:
+  41 000c FFF7FEFF 		bl	__aeabi_d2uiz
+  42              	.LVL2:
+  43 0010 C0B2     		uxtb	r0, r0
+  44              	.LVL3:
+  25:../src/USART_program2.c **** 	if(fraction > 15)
+  45              		.loc 1 25 0
+  46 0012 0F28     		cmp	r0, #15
+  47 0014 25D8     		bhi	.L5
+  26:../src/USART_program2.c **** 	{
+  27:../src/USART_program2.c **** 		USART1->BRR |= ((mantissa + 1) << 4);
+  28:../src/USART_program2.c **** 		USART1->BRR |= 0b0000;
+  29:../src/USART_program2.c **** 	}
+  30:../src/USART_program2.c **** 	else
+  31:../src/USART_program2.c **** 	{
+  32:../src/USART_program2.c **** 		USART1->BRR |= (mantissa << 4);
+  48              		.loc 1 32 0
+  49 0016 1A4B     		ldr	r3, .L6+8
+  50 0018 9A68     		ldr	r2, [r3, #8]
+  51 001a 42F04002 		orr	r2, r2, #64
+  52 001e 9A60     		str	r2, [r3, #8]
+  33:../src/USART_program2.c **** 		USART1->BRR |= fraction;
+  53              		.loc 1 33 0
+  54 0020 9A68     		ldr	r2, [r3, #8]
+  55 0022 1043     		orrs	r0, r0, r2
+  56              	.LVL4:
+  57 0024 9860     		str	r0, [r3, #8]
+  58              	.L3:
+  34:../src/USART_program2.c **** 	}
+  35:../src/USART_program2.c **** 
+  36:../src/USART_program2.c **** 	USART1->CR1 |= USART1_WORD_LENGTH << 12;
+  59              		.loc 1 36 0
+  60 0026 164B     		ldr	r3, .L6+8
+  61 0028 DA68     		ldr	r2, [r3, #12]
+  62 002a DA60     		str	r2, [r3, #12]
+  37:../src/USART_program2.c **** 	USART1->CR1 |= USART1_PARITY_ENABLE <<10;
+  63              		.loc 1 37 0
+  64 002c DA68     		ldr	r2, [r3, #12]
+  65 002e DA60     		str	r2, [r3, #12]
+  38:../src/USART_program2.c **** 	USART1->CR1 |= USART1_PARITY_SELECTION << 9;
+  66              		.loc 1 38 0
+  67 0030 DA68     		ldr	r2, [r3, #12]
+  68 0032 DA60     		str	r2, [r3, #12]
+  39:../src/USART_program2.c **** 	USART1->CR1 |= USART1_PARITY_INTERRUPT_ENABLE << 8;
+  69              		.loc 1 39 0
+  70 0034 DA68     		ldr	r2, [r3, #12]
+  71 0036 DA60     		str	r2, [r3, #12]
+  40:../src/USART_program2.c **** 	USART1->CR1 |= USART1_TX_INTERRUPT_ENABLE << 7;
+  72              		.loc 1 40 0
+  73 0038 DA68     		ldr	r2, [r3, #12]
+  74 003a DA60     		str	r2, [r3, #12]
+  41:../src/USART_program2.c **** 	USART1->CR1 |= USART1_TRANSMISSION_COMPLETE_INTERRUPT_ENABLE << 6;
+  75              		.loc 1 41 0
+  76 003c DA68     		ldr	r2, [r3, #12]
+  77 003e DA60     		str	r2, [r3, #12]
+  42:../src/USART_program2.c **** 	USART1->CR1 |= USART1_RX_INTERRUPT_ENABLE << 5;
+  78              		.loc 1 42 0
+  79 0040 DA68     		ldr	r2, [r3, #12]
+  80 0042 DA60     		str	r2, [r3, #12]
+  43:../src/USART_program2.c **** 	USART1->CR1 |= 1<<3; /* enable transmitter */
+  81              		.loc 1 43 0
+  82 0044 DA68     		ldr	r2, [r3, #12]
+  83 0046 42F00802 		orr	r2, r2, #8
+  84 004a DA60     		str	r2, [r3, #12]
+  44:../src/USART_program2.c **** 	USART1->CR1 |= 1<<2; /* enable receiver */
+  85              		.loc 1 44 0
+  86 004c DA68     		ldr	r2, [r3, #12]
+  87 004e 42F00402 		orr	r2, r2, #4
+  88 0052 DA60     		str	r2, [r3, #12]
+  45:../src/USART_program2.c **** 	USART1->CR2 |= USART1_STOP_BIT << 12 ;
+  89              		.loc 1 45 0
+  90 0054 1A69     		ldr	r2, [r3, #16]
+  91 0056 1A61     		str	r2, [r3, #16]
+  46:../src/USART_program2.c **** 	USART1->CR1 |= 1<<13; /* enable USART1 */
+  92              		.loc 1 46 0
+  93 0058 DA68     		ldr	r2, [r3, #12]
+  94 005a 42F40052 		orr	r2, r2, #8192
+  95 005e DA60     		str	r2, [r3, #12]
+  47:../src/USART_program2.c **** }
+  96              		.loc 1 47 0
+  97 0060 08BD     		pop	{r3, pc}
+  98              	.LVL5:
+  99              	.L5:
+  27:../src/USART_program2.c **** 		USART1->BRR |= 0b0000;
+ 100              		.loc 1 27 0
+ 101 0062 074B     		ldr	r3, .L6+8
+ 102 0064 9A68     		ldr	r2, [r3, #8]
+ 103 0066 42F05002 		orr	r2, r2, #80
+ 104 006a 9A60     		str	r2, [r3, #8]
+  28:../src/USART_program2.c **** 	}
+ 105              		.loc 1 28 0
+ 106 006c 9A68     		ldr	r2, [r3, #8]
+ 107 006e 9A60     		str	r2, [r3, #8]
+ 108 0070 D9E7     		b	.L3
+ 109              	.L7:
+ 110 0072 00BFAFF3 		.align	3
+ 110      0080
+ 111              	.L6:
+ 112 0078 00000000 		.word	0
+ 113 007c 1CC71540 		.word	1075169052
+ 114 0080 00380140 		.word	1073821696
+ 115              		.cfi_endproc
+ 116              	.LFE0:
+ 118              		.section	.text.USART1_voidSendByte,"ax",%progbits
+ 119              		.align	1
+ 120              		.global	USART1_voidSendByte
+ 121              		.syntax unified
+ 122              		.thumb
+ 123              		.thumb_func
+ 124              		.fpu softvfp
+ 126              	USART1_voidSendByte:
+ 127              	.LFB1:
+  48:../src/USART_program2.c **** 
+  49:../src/USART_program2.c **** void USART1_voidSendByte(u8 copy_u8Data)
+  50:../src/USART_program2.c **** {
+ 128              		.loc 1 50 0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132              		@ link register save eliminated.
+ 133              	.LVL6:
+ 134              	.L9:
+  51:../src/USART_program2.c **** 	while(!(GET_BIT(USART1->SR,6)));
+ 135              		.loc 1 51 0 discriminator 1
+ 136 0000 034B     		ldr	r3, .L10
+ 137 0002 1B68     		ldr	r3, [r3]
+ 138 0004 13F0400F 		tst	r3, #64
+ 139 0008 FAD0     		beq	.L9
+  52:../src/USART_program2.c **** 	USART1->DR = copy_u8Data;
+ 140              		.loc 1 52 0
+ 141 000a 014B     		ldr	r3, .L10
+ 142 000c 5860     		str	r0, [r3, #4]
+  53:../src/USART_program2.c **** }
+ 143              		.loc 1 53 0
+ 144 000e 7047     		bx	lr
+ 145              	.L11:
+ 146              		.align	2
+ 147              	.L10:
+ 148 0010 00380140 		.word	1073821696
+ 149              		.cfi_endproc
+ 150              	.LFE1:
+ 152              		.section	.text.USART1_voidSendString,"ax",%progbits
+ 153              		.align	1
+ 154              		.global	USART1_voidSendString
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 158              		.fpu softvfp
+ 160              	USART1_voidSendString:
+ 161              	.LFB2:
+  54:../src/USART_program2.c **** 
+  55:../src/USART_program2.c **** void USART1_voidSendString(u8 const*arr)
+  56:../src/USART_program2.c **** {
+ 162              		.loc 1 56 0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 0
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              	.LVL7:
+ 167 0000 38B5     		push	{r3, r4, r5, lr}
+ 168              		.cfi_def_cfa_offset 16
+ 169              		.cfi_offset 3, -16
+ 170              		.cfi_offset 4, -12
+ 171              		.cfi_offset 5, -8
+ 172              		.cfi_offset 14, -4
+ 173 0002 0546     		mov	r5, r0
+ 174              	.LVL8:
+  57:../src/USART_program2.c **** 	u8 i=0;
+ 175              		.loc 1 57 0
+ 176 0004 0024     		movs	r4, #0
+  58:../src/USART_program2.c **** 	while(arr[i]!='\0')
+ 177              		.loc 1 58 0
+ 178 0006 03E0     		b	.L13
+ 179              	.LVL9:
+ 180              	.L14:
+  59:../src/USART_program2.c **** 	{
+  60:../src/USART_program2.c **** 		USART1_voidSendByte(arr[i]);
+ 181              		.loc 1 60 0
+ 182 0008 FFF7FEFF 		bl	USART1_voidSendByte
+ 183              	.LVL10:
+  61:../src/USART_program2.c **** 		i++;
+ 184              		.loc 1 61 0
+ 185 000c 0134     		adds	r4, r4, #1
+ 186              	.LVL11:
+ 187 000e E4B2     		uxtb	r4, r4
+ 188              	.LVL12:
+ 189              	.L13:
+  58:../src/USART_program2.c **** 	while(arr[i]!='\0')
+ 190              		.loc 1 58 0
+ 191 0010 285D     		ldrb	r0, [r5, r4]	@ zero_extendqisi2
+ 192 0012 0028     		cmp	r0, #0
+ 193 0014 F8D1     		bne	.L14
+  62:../src/USART_program2.c **** 	}
+  63:../src/USART_program2.c **** }
+ 194              		.loc 1 63 0
+ 195 0016 38BD     		pop	{r3, r4, r5, pc}
+ 196              		.cfi_endproc
+ 197              	.LFE2:
+ 199              		.section	.text.USART1_u8ReceiveByte,"ax",%progbits
+ 200              		.align	1
+ 201              		.global	USART1_u8ReceiveByte
+ 202              		.syntax unified
+ 203              		.thumb
+ 204              		.thumb_func
+ 205              		.fpu softvfp
+ 207              	USART1_u8ReceiveByte:
+ 208              	.LFB3:
+  64:../src/USART_program2.c **** 
+  65:../src/USART_program2.c **** u8 USART1_u8ReceiveByte(void)
+  66:../src/USART_program2.c **** {
+ 209              		.loc 1 66 0
+ 210              		.cfi_startproc
+ 211              		@ args = 0, pretend = 0, frame = 0
+ 212              		@ frame_needed = 0, uses_anonymous_args = 0
+ 213              		@ link register save eliminated.
+ 214              	.LVL13:
+  67:../src/USART_program2.c **** 	u8 Local_u8ReceivedData = 0;
+  68:../src/USART_program2.c **** 	u32 count = 0;
+ 215              		.loc 1 68 0
+ 216 0000 0023     		movs	r3, #0
+ 217              	.LVL14:
+ 218              	.L17:
+  69:../src/USART_program2.c **** 	while(!(GET_BIT(USART1->SR,5)))
+ 219              		.loc 1 69 0
+ 220 0002 084A     		ldr	r2, .L23
+ 221 0004 1268     		ldr	r2, [r2]
+ 222 0006 12F0200F 		tst	r2, #32
+ 223 000a 05D1     		bne	.L22
+  70:../src/USART_program2.c **** 	{
+  71:../src/USART_program2.c **** 		count++;
+ 224              		.loc 1 71 0
+ 225 000c 0133     		adds	r3, r3, #1
+ 226              	.LVL15:
+  72:../src/USART_program2.c **** 		if(count == 500000)
+ 227              		.loc 1 72 0
+ 228 000e 064A     		ldr	r2, .L23+4
+ 229 0010 9342     		cmp	r3, r2
+ 230 0012 F6D1     		bne	.L17
+  73:../src/USART_program2.c **** 		{
+  74:../src/USART_program2.c **** 			Local_u8ReceivedData = 255;
+ 231              		.loc 1 74 0
+ 232 0014 FF20     		movs	r0, #255
+ 233 0016 00E0     		b	.L18
+ 234              	.L22:
+  67:../src/USART_program2.c **** 	u32 count = 0;
+ 235              		.loc 1 67 0
+ 236 0018 0020     		movs	r0, #0
+ 237              	.L18:
+ 238              	.LVL16:
+  75:../src/USART_program2.c **** 			break;
+  76:../src/USART_program2.c **** 		}
+  77:../src/USART_program2.c **** 	}
+  78:../src/USART_program2.c **** 	
+  79:../src/USART_program2.c **** 	if(Local_u8ReceivedData == 0)
+ 239              		.loc 1 79 0
+ 240 001a 10B9     		cbnz	r0, .L20
+  80:../src/USART_program2.c **** 	{
+  81:../src/USART_program2.c **** 		Local_u8ReceivedData = USART1->DR;
+ 241              		.loc 1 81 0
+ 242 001c 014B     		ldr	r3, .L23
+ 243              	.LVL17:
+ 244 001e 5868     		ldr	r0, [r3, #4]
+ 245              	.LVL18:
+ 246 0020 C0B2     		uxtb	r0, r0
+ 247              	.LVL19:
+ 248              	.L20:
+  82:../src/USART_program2.c **** 	}
+  83:../src/USART_program2.c **** 	
+  84:../src/USART_program2.c **** 	return Local_u8ReceivedData;
+  85:../src/USART_program2.c **** }
+ 249              		.loc 1 85 0
+ 250 0022 7047     		bx	lr
+ 251              	.L24:
+ 252              		.align	2
+ 253              	.L23:
+ 254 0024 00380140 		.word	1073821696
+ 255 0028 20A10700 		.word	500000
+ 256              		.cfi_endproc
+ 257              	.LFE3:
+ 259              		.section	.text.USART1_voidReceiveString,"ax",%progbits
+ 260              		.align	1
+ 261              		.global	USART1_voidReceiveString
+ 262              		.syntax unified
+ 263              		.thumb
+ 264              		.thumb_func
+ 265              		.fpu softvfp
+ 267              	USART1_voidReceiveString:
+ 268              	.LFB4:
+  86:../src/USART_program2.c **** 
+  87:../src/USART_program2.c **** void USART1_voidReceiveString(u8 *arr)
+  88:../src/USART_program2.c **** {
+ 269              		.loc 1 88 0
+ 270              		.cfi_startproc
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              	.LVL20:
+ 274 0000 38B5     		push	{r3, r4, r5, lr}
+ 275              		.cfi_def_cfa_offset 16
+ 276              		.cfi_offset 3, -16
+ 277              		.cfi_offset 4, -12
+ 278              		.cfi_offset 5, -8
+ 279              		.cfi_offset 14, -4
+ 280 0002 0546     		mov	r5, r0
+ 281              	.LVL21:
+  89:../src/USART_program2.c **** 	u8 i = 0;
+  90:../src/USART_program2.c **** 	arr[i]=USART1_u8ReceiveByte();
+ 282              		.loc 1 90 0
+ 283 0004 FFF7FEFF 		bl	USART1_u8ReceiveByte
+ 284              	.LVL22:
+ 285 0008 2870     		strb	r0, [r5]
+  89:../src/USART_program2.c **** 	u8 i = 0;
+ 286              		.loc 1 89 0
+ 287 000a 0024     		movs	r4, #0
+  91:../src/USART_program2.c **** 	while(arr[i] != '#')
+ 288              		.loc 1 91 0
+ 289 000c 04E0     		b	.L26
+ 290              	.LVL23:
+ 291              	.L27:
+  92:../src/USART_program2.c **** 	{
+  93:../src/USART_program2.c **** 		i++;
+ 292              		.loc 1 93 0
+ 293 000e 0134     		adds	r4, r4, #1
+ 294              	.LVL24:
+ 295 0010 E4B2     		uxtb	r4, r4
+ 296              	.LVL25:
+  94:../src/USART_program2.c **** 		arr[i] = USART1_u8ReceiveByte() ;
+ 297              		.loc 1 94 0
+ 298 0012 FFF7FEFF 		bl	USART1_u8ReceiveByte
+ 299              	.LVL26:
+ 300 0016 2855     		strb	r0, [r5, r4]
+ 301              	.LVL27:
+ 302              	.L26:
+  91:../src/USART_program2.c **** 	while(arr[i] != '#')
+ 303              		.loc 1 91 0
+ 304 0018 2A19     		adds	r2, r5, r4
+ 305 001a 2B5D     		ldrb	r3, [r5, r4]	@ zero_extendqisi2
+ 306 001c 232B     		cmp	r3, #35
+ 307 001e F6D1     		bne	.L27
+  95:../src/USART_program2.c **** 
+  96:../src/USART_program2.c **** 	}
+  97:../src/USART_program2.c **** 	arr[i] = '\0' ;
+ 308              		.loc 1 97 0
+ 309 0020 0023     		movs	r3, #0
+ 310 0022 1370     		strb	r3, [r2]
+  98:../src/USART_program2.c **** }
+ 311              		.loc 1 98 0
+ 312 0024 38BD     		pop	{r3, r4, r5, pc}
+ 313              		.cfi_endproc
+ 314              	.LFE4:
+ 316              		.text
+ 317              	.Letext0:
+ 318              		.file 2 "../include/STD_TYPES.h"
+ 319              		.file 3 "../include/USART_private.h"
+ 320              		.file 4 "c:\\avr_arm\\winarm\\armgcc\\arm-none-eabi\\include\\sys\\lock.h"
+ 321              		.file 5 "c:\\avr_arm\\winarm\\armgcc\\arm-none-eabi\\include\\sys\\_types.h"
+ 322              		.file 6 "c:\\avr_arm\\winarm\\armgcc\\lib\\gcc\\arm-none-eabi\\7.2.1\\include\\stddef.h"
+ 323              		.file 7 "c:\\avr_arm\\winarm\\armgcc\\arm-none-eabi\\include\\sys\\reent.h"
+ 324              		.file 8 "c:\\avr_arm\\winarm\\armgcc\\arm-none-eabi\\include\\math.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 USART_program2.c
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:17     .text.USART1_voidInit:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:24     .text.USART1_voidInit:00000000 USART1_voidInit
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:112    .text.USART1_voidInit:00000078 $d
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:119    .text.USART1_voidSendByte:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:126    .text.USART1_voidSendByte:00000000 USART1_voidSendByte
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:148    .text.USART1_voidSendByte:00000010 $d
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:153    .text.USART1_voidSendString:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:160    .text.USART1_voidSendString:00000000 USART1_voidSendString
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:200    .text.USART1_u8ReceiveByte:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:207    .text.USART1_u8ReceiveByte:00000000 USART1_u8ReceiveByte
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:254    .text.USART1_u8ReceiveByte:00000024 $d
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:260    .text.USART1_voidReceiveString:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccgoEtrh.s:267    .text.USART1_voidReceiveString:00000000 USART1_voidReceiveString
+                           .group:00000000 wm4.0.c450a18b2a29049e2cbb4137d58ca9b1
+                           .group:00000000 wm4.BIT_MATH.h.7.8c067faa1c2a78484709e69a816ceacc
+                           .group:00000000 wm4.USART_private.h.7.ca068701f9274c7898dd99442c8e7052
+                           .group:00000000 wm4.USART_config.h.7.57fe2c2e2db3c900597270ab84f95256
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.64e14ed41172bf448383d50cbb14725e
+                           .group:00000000 wm4.ieeefp.h.77.49bcce8a603f3d93a95080d6a3573782
+                           .group:00000000 wm4.features.h.22.5cdadbb3efe495d1c9e38350b8c376c7
+                           .group:00000000 wm4.config.h.220.6cac6a9685cfce5e83c17784171638d9
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.a38874c8f8a57e66301090908ec2a69f
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.184.7120b8bb2e0149e2359704f4e2251b68
+                           .group:00000000 wm4.reent.h.17.87376802c2b370b32a762f0a30482d9e
+                           .group:00000000 wm4.cdefs.h.47.d5f52c0838d768c139d665d47892271a
+                           .group:00000000 wm4.math.h.13.adb102f7bd7860b1f241e149d6914a1e
+
+UNDEFINED SYMBOLS
+__aeabi_d2uiz
+round

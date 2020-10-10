@@ -1,0 +1,530 @@
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"DIO_program.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.GPIO_voidSetPinDir,"ax",%progbits
+  16              		.align	1
+  17              		.global	GPIO_voidSetPinDir
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	GPIO_voidSetPinDir:
+  24              	.LFB0:
+  25              		.file 1 "../src/DIO_program.c"
+   1:../src/DIO_program.c **** /******************************************************************************/
+   2:../src/DIO_program.c **** /* Author       :George Ghoubrial                                             */
+   3:../src/DIO_program.c **** /* Version      :V01                                                          */
+   4:../src/DIO_program.c **** /* Date         :12 Augest 2020                                               */                   
+   5:../src/DIO_program.c **** /******************************************************************************/
+   6:../src/DIO_program.c **** 
+   7:../src/DIO_program.c **** #include "STD_TYPES.h"
+   8:../src/DIO_program.c **** #include "BIT_MATH.h"
+   9:../src/DIO_program.c **** 
+  10:../src/DIO_program.c **** #include "DIO_interface.h"
+  11:../src/DIO_program.c **** #include "DIO_private.h"
+  12:../src/DIO_program.c **** #include "DIO_config.h"
+  13:../src/DIO_program.c **** 
+  14:../src/DIO_program.c **** void GPIO_voidSetPinDir(u8 copy_u8Port,u8 copy_u8Pin,u8 copy_u8Mode)
+  15:../src/DIO_program.c **** {
+  26              		.loc 1 15 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31              	.LVL0:
+  32 0000 10B4     		push	{r4}
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 4, -4
+  16:../src/DIO_program.c **** 	switch(copy_u8Port)
+  35              		.loc 1 16 0
+  36 0002 0128     		cmp	r0, #1
+  37 0004 23D0     		beq	.L3
+  38 0006 18B1     		cbz	r0, .L4
+  39 0008 0228     		cmp	r0, #2
+  40 000a 3FD0     		beq	.L5
+  41              	.LVL1:
+  42              	.L1:
+  17:../src/DIO_program.c **** 	{
+  18:../src/DIO_program.c **** 		case GPIOA:
+  19:../src/DIO_program.c **** 		    if(copy_u8Pin < 8)
+  20:../src/DIO_program.c **** 		    {
+  21:../src/DIO_program.c **** 		    	GPIOA_CRL = ((GPIOA_CRL & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  22:../src/DIO_program.c **** 		    }
+  23:../src/DIO_program.c **** 		    else if(copy_u8Pin < 16)
+  24:../src/DIO_program.c **** 		    {
+  25:../src/DIO_program.c **** 		    	copy_u8Pin = copy_u8Pin - 8;
+  26:../src/DIO_program.c **** 		    	GPIOA_CRH  = ((GPIOA_CRH & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  27:../src/DIO_program.c **** 		    }
+  28:../src/DIO_program.c **** 		    else
+  29:../src/DIO_program.c **** 		    {
+  30:../src/DIO_program.c **** 		    	/*return error*/
+  31:../src/DIO_program.c **** 		    }
+  32:../src/DIO_program.c **** 		    break;
+  33:../src/DIO_program.c **** 		case GPIOB:
+  34:../src/DIO_program.c **** 		    if(copy_u8Pin < 8)
+  35:../src/DIO_program.c **** 		    {
+  36:../src/DIO_program.c **** 		    	GPIOB_CRL = ((GPIOB_CRL & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  37:../src/DIO_program.c **** 		    }
+  38:../src/DIO_program.c **** 		    else if(copy_u8Pin < 16)
+  39:../src/DIO_program.c **** 		    {
+  40:../src/DIO_program.c **** 		    	copy_u8Pin = copy_u8Pin - 8;
+  41:../src/DIO_program.c **** 		    	GPIOB_CRH  = ((GPIOB_CRH & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  42:../src/DIO_program.c **** 		    }
+  43:../src/DIO_program.c **** 		    else
+  44:../src/DIO_program.c **** 		    {
+  45:../src/DIO_program.c **** 		    	/*return error*/
+  46:../src/DIO_program.c **** 		    }
+  47:../src/DIO_program.c **** 		    break;
+  48:../src/DIO_program.c **** 		case GPIOC:
+  49:../src/DIO_program.c **** 		    if(copy_u8Pin < 8)
+  50:../src/DIO_program.c **** 		    {
+  51:../src/DIO_program.c **** 		    	GPIOC_CRL = ((GPIOC_CRL & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  52:../src/DIO_program.c **** 		    }
+  53:../src/DIO_program.c **** 		    else if(copy_u8Pin < 16)
+  54:../src/DIO_program.c **** 		    {
+  55:../src/DIO_program.c **** 		    	copy_u8Pin = copy_u8Pin - 8;
+  56:../src/DIO_program.c **** 		    	GPIOC_CRH  = ((GPIOC_CRH & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  57:../src/DIO_program.c **** 		    }
+  58:../src/DIO_program.c **** 		    else
+  59:../src/DIO_program.c **** 		    {
+  60:../src/DIO_program.c **** 		    	/*return error*/
+  61:../src/DIO_program.c **** 		    }
+  62:../src/DIO_program.c **** 		    break;
+  63:../src/DIO_program.c **** 		//default: /* return error */
+  64:../src/DIO_program.c **** 	}
+  65:../src/DIO_program.c **** }
+  43              		.loc 1 65 0
+  44 000c 10BC     		pop	{r4}
+  45              		.cfi_remember_state
+  46              		.cfi_restore 4
+  47              		.cfi_def_cfa_offset 0
+  48 000e 7047     		bx	lr
+  49              	.LVL2:
+  50              	.L4:
+  51              		.cfi_restore_state
+  19:../src/DIO_program.c **** 		    {
+  52              		.loc 1 19 0
+  53 0010 0729     		cmp	r1, #7
+  54 0012 10D9     		bls	.L10
+  23:../src/DIO_program.c **** 		    {
+  55              		.loc 1 23 0
+  56 0014 0F29     		cmp	r1, #15
+  57 0016 F9D8     		bhi	.L1
+  25:../src/DIO_program.c **** 		    	GPIOA_CRH  = ((GPIOA_CRH & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  58              		.loc 1 25 0
+  59 0018 A1F10804 		sub	r4, r1, #8
+  60 001c E4B2     		uxtb	r4, r4
+  61              	.LVL3:
+  26:../src/DIO_program.c **** 		    }
+  62              		.loc 1 26 0
+  63 001e 2B48     		ldr	r0, .L13
+  64              	.LVL4:
+  65 0020 0168     		ldr	r1, [r0]
+  66 0022 A400     		lsls	r4, r4, #2
+  67              	.LVL5:
+  68 0024 0F23     		movs	r3, #15
+  69 0026 A340     		lsls	r3, r3, r4
+  70 0028 21EA0303 		bic	r3, r1, r3
+  71 002c 02FA04F1 		lsl	r1, r2, r4
+  72 0030 1943     		orrs	r1, r1, r3
+  73 0032 0160     		str	r1, [r0]
+  74 0034 EAE7     		b	.L1
+  75              	.LVL6:
+  76              	.L10:
+  21:../src/DIO_program.c **** 		    }
+  77              		.loc 1 21 0
+  78 0036 264C     		ldr	r4, .L13+4
+  79 0038 2368     		ldr	r3, [r4]
+  80 003a 8900     		lsls	r1, r1, #2
+  81              	.LVL7:
+  82 003c 0F20     		movs	r0, #15
+  83              	.LVL8:
+  84 003e 8840     		lsls	r0, r0, r1
+  85 0040 23EA0003 		bic	r3, r3, r0
+  86 0044 02FA01F1 		lsl	r1, r2, r1
+  87 0048 1943     		orrs	r1, r1, r3
+  88 004a 2160     		str	r1, [r4]
+  89 004c DEE7     		b	.L1
+  90              	.LVL9:
+  91              	.L3:
+  34:../src/DIO_program.c **** 		    {
+  92              		.loc 1 34 0
+  93 004e 0729     		cmp	r1, #7
+  94 0050 10D9     		bls	.L11
+  38:../src/DIO_program.c **** 		    {
+  95              		.loc 1 38 0
+  96 0052 0F29     		cmp	r1, #15
+  97 0054 DAD8     		bhi	.L1
+  40:../src/DIO_program.c **** 		    	GPIOB_CRH  = ((GPIOB_CRH & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+  98              		.loc 1 40 0
+  99 0056 A1F10800 		sub	r0, r1, #8
+ 100              	.LVL10:
+ 101 005a C0B2     		uxtb	r0, r0
+ 102              	.LVL11:
+  41:../src/DIO_program.c **** 		    }
+ 103              		.loc 1 41 0
+ 104 005c 1D4C     		ldr	r4, .L13+8
+ 105 005e 2168     		ldr	r1, [r4]
+ 106 0060 8000     		lsls	r0, r0, #2
+ 107              	.LVL12:
+ 108 0062 0F23     		movs	r3, #15
+ 109 0064 8340     		lsls	r3, r3, r0
+ 110 0066 21EA0303 		bic	r3, r1, r3
+ 111 006a 02FA00F1 		lsl	r1, r2, r0
+ 112 006e 1943     		orrs	r1, r1, r3
+ 113 0070 2160     		str	r1, [r4]
+ 114 0072 CBE7     		b	.L1
+ 115              	.LVL13:
+ 116              	.L11:
+  36:../src/DIO_program.c **** 		    }
+ 117              		.loc 1 36 0
+ 118 0074 184C     		ldr	r4, .L13+12
+ 119 0076 2368     		ldr	r3, [r4]
+ 120 0078 8900     		lsls	r1, r1, #2
+ 121              	.LVL14:
+ 122 007a 0F20     		movs	r0, #15
+ 123              	.LVL15:
+ 124 007c 8840     		lsls	r0, r0, r1
+ 125 007e 23EA0003 		bic	r3, r3, r0
+ 126 0082 02FA01F1 		lsl	r1, r2, r1
+ 127 0086 1943     		orrs	r1, r1, r3
+ 128 0088 2160     		str	r1, [r4]
+ 129 008a BFE7     		b	.L1
+ 130              	.LVL16:
+ 131              	.L5:
+  49:../src/DIO_program.c **** 		    {
+ 132              		.loc 1 49 0
+ 133 008c 0729     		cmp	r1, #7
+ 134 008e 10D9     		bls	.L12
+  53:../src/DIO_program.c **** 		    {
+ 135              		.loc 1 53 0
+ 136 0090 0F29     		cmp	r1, #15
+ 137 0092 BBD8     		bhi	.L1
+  55:../src/DIO_program.c **** 		    	GPIOC_CRH  = ((GPIOC_CRH & ~(0b1111<<(4*copy_u8Pin))) | (copy_u8Mode<<(4*copy_u8Pin)));
+ 138              		.loc 1 55 0
+ 139 0094 A1F10803 		sub	r3, r1, #8
+ 140 0098 DBB2     		uxtb	r3, r3
+ 141              	.LVL17:
+  56:../src/DIO_program.c **** 		    }
+ 142              		.loc 1 56 0
+ 143 009a 104C     		ldr	r4, .L13+16
+ 144 009c 2168     		ldr	r1, [r4]
+ 145 009e 9B00     		lsls	r3, r3, #2
+ 146              	.LVL18:
+ 147 00a0 0F20     		movs	r0, #15
+ 148              	.LVL19:
+ 149 00a2 9840     		lsls	r0, r0, r3
+ 150 00a4 21EA0000 		bic	r0, r1, r0
+ 151 00a8 02FA03F1 		lsl	r1, r2, r3
+ 152 00ac 0143     		orrs	r1, r1, r0
+ 153 00ae 2160     		str	r1, [r4]
+ 154              		.loc 1 65 0
+ 155 00b0 ACE7     		b	.L1
+ 156              	.LVL20:
+ 157              	.L12:
+  51:../src/DIO_program.c **** 		    }
+ 158              		.loc 1 51 0
+ 159 00b2 0B4C     		ldr	r4, .L13+20
+ 160 00b4 2368     		ldr	r3, [r4]
+ 161 00b6 8900     		lsls	r1, r1, #2
+ 162              	.LVL21:
+ 163 00b8 0F20     		movs	r0, #15
+ 164              	.LVL22:
+ 165 00ba 8840     		lsls	r0, r0, r1
+ 166 00bc 23EA0003 		bic	r3, r3, r0
+ 167 00c0 02FA01F1 		lsl	r1, r2, r1
+ 168 00c4 1943     		orrs	r1, r1, r3
+ 169 00c6 2160     		str	r1, [r4]
+ 170 00c8 A0E7     		b	.L1
+ 171              	.L14:
+ 172 00ca 00BF     		.align	2
+ 173              	.L13:
+ 174 00cc 04080140 		.word	1073809412
+ 175 00d0 00080140 		.word	1073809408
+ 176 00d4 040C0140 		.word	1073810436
+ 177 00d8 000C0140 		.word	1073810432
+ 178 00dc 04100140 		.word	1073811460
+ 179 00e0 00100140 		.word	1073811456
+ 180              		.cfi_endproc
+ 181              	.LFE0:
+ 183              		.section	.text.GPIO_voidSetPinValue,"ax",%progbits
+ 184              		.align	1
+ 185              		.global	GPIO_voidSetPinValue
+ 186              		.syntax unified
+ 187              		.thumb
+ 188              		.thumb_func
+ 189              		.fpu softvfp
+ 191              	GPIO_voidSetPinValue:
+ 192              	.LFB1:
+  66:../src/DIO_program.c **** 
+  67:../src/DIO_program.c **** void GPIO_voidSetPinValue(u8 copy_u8Port,u8 copy_u8Pin,u8 copy_u8Value)
+  68:../src/DIO_program.c **** {
+ 193              		.loc 1 68 0
+ 194              		.cfi_startproc
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197              		@ link register save eliminated.
+ 198              	.LVL23:
+  69:../src/DIO_program.c **** 	switch(copy_u8Port)
+ 199              		.loc 1 69 0
+ 200 0000 0128     		cmp	r0, #1
+ 201 0002 12D0     		beq	.L17
+ 202 0004 10B1     		cbz	r0, .L18
+ 203 0006 0228     		cmp	r0, #2
+ 204 0008 1ED0     		beq	.L19
+ 205 000a 7047     		bx	lr
+ 206              	.L18:
+  70:../src/DIO_program.c **** 	{
+  71:../src/DIO_program.c **** 		case GPIOA:
+  72:../src/DIO_program.c **** 			if(copy_u8Value == HIGH)
+ 207              		.loc 1 72 0
+ 208 000c 012A     		cmp	r2, #1
+ 209 000e 06D0     		beq	.L23
+  73:../src/DIO_program.c **** 			{
+  74:../src/DIO_program.c **** 				GPIOA_BSRR = (1 << copy_u8Pin);
+  75:../src/DIO_program.c **** 			}
+  76:../src/DIO_program.c **** 			else if (copy_u8Value == LOW)
+ 210              		.loc 1 76 0
+ 211 0010 12BB     		cbnz	r2, .L15
+  77:../src/DIO_program.c **** 			{
+  78:../src/DIO_program.c **** 				GPIOA_BRR = (1 << copy_u8Pin);
+ 212              		.loc 1 78 0
+ 213 0012 0123     		movs	r3, #1
+ 214 0014 03FA01F1 		lsl	r1, r3, r1
+ 215              	.LVL24:
+ 216 0018 134B     		ldr	r3, .L26
+ 217 001a 1960     		str	r1, [r3]
+ 218 001c 7047     		bx	lr
+ 219              	.LVL25:
+ 220              	.L23:
+  74:../src/DIO_program.c **** 			}
+ 221              		.loc 1 74 0
+ 222 001e 0123     		movs	r3, #1
+ 223 0020 03FA01F1 		lsl	r1, r3, r1
+ 224              	.LVL26:
+ 225 0024 114B     		ldr	r3, .L26+4
+ 226 0026 1960     		str	r1, [r3]
+ 227 0028 7047     		bx	lr
+ 228              	.LVL27:
+ 229              	.L17:
+  79:../src/DIO_program.c **** 			}
+  80:../src/DIO_program.c **** 			break;
+  81:../src/DIO_program.c **** 		case GPIOB:
+  82:../src/DIO_program.c **** 			if(copy_u8Value == HIGH)
+ 230              		.loc 1 82 0
+ 231 002a 012A     		cmp	r2, #1
+ 232 002c 06D0     		beq	.L24
+  83:../src/DIO_program.c **** 			{
+  84:../src/DIO_program.c **** 				GPIOB_BSRR = (1 << copy_u8Pin);
+  85:../src/DIO_program.c **** 			}
+  86:../src/DIO_program.c **** 			else if (copy_u8Value == LOW)
+ 233              		.loc 1 86 0
+ 234 002e 9AB9     		cbnz	r2, .L15
+  87:../src/DIO_program.c **** 			{
+  88:../src/DIO_program.c **** 				GPIOB_BRR = (1 << copy_u8Pin);
+ 235              		.loc 1 88 0
+ 236 0030 0123     		movs	r3, #1
+ 237 0032 03FA01F1 		lsl	r1, r3, r1
+ 238              	.LVL28:
+ 239 0036 0E4B     		ldr	r3, .L26+8
+ 240 0038 1960     		str	r1, [r3]
+ 241 003a 7047     		bx	lr
+ 242              	.LVL29:
+ 243              	.L24:
+  84:../src/DIO_program.c **** 			}
+ 244              		.loc 1 84 0
+ 245 003c 0123     		movs	r3, #1
+ 246 003e 03FA01F1 		lsl	r1, r3, r1
+ 247              	.LVL30:
+ 248 0042 0C4B     		ldr	r3, .L26+12
+ 249 0044 1960     		str	r1, [r3]
+ 250 0046 7047     		bx	lr
+ 251              	.LVL31:
+ 252              	.L19:
+  89:../src/DIO_program.c **** 			}
+  90:../src/DIO_program.c **** 			break;
+  91:../src/DIO_program.c **** 		case GPIOC:
+  92:../src/DIO_program.c **** 			if(copy_u8Value == HIGH)
+ 253              		.loc 1 92 0
+ 254 0048 012A     		cmp	r2, #1
+ 255 004a 06D0     		beq	.L25
+  93:../src/DIO_program.c **** 			{
+  94:../src/DIO_program.c **** 				GPIOC_BSRR = (1 << copy_u8Pin);
+  95:../src/DIO_program.c **** 			}
+  96:../src/DIO_program.c **** 			else if (copy_u8Value == LOW)
+ 256              		.loc 1 96 0
+ 257 004c 22B9     		cbnz	r2, .L15
+  97:../src/DIO_program.c **** 			{
+  98:../src/DIO_program.c **** 				GPIOC_BRR = (1 << copy_u8Pin);
+ 258              		.loc 1 98 0
+ 259 004e 0123     		movs	r3, #1
+ 260 0050 03FA01F1 		lsl	r1, r3, r1
+ 261              	.LVL32:
+ 262 0054 084B     		ldr	r3, .L26+16
+ 263 0056 1960     		str	r1, [r3]
+ 264              	.L15:
+  99:../src/DIO_program.c **** 			}
+ 100:../src/DIO_program.c **** 			break;
+ 101:../src/DIO_program.c **** 		//default: /* return error */
+ 102:../src/DIO_program.c **** 		/*
+ 103:../src/DIO_program.c **** 		case GPIOA:
+ 104:../src/DIO_program.c **** 		GPIOA_ODR |= copy_u8Value << copy_u8Pin;
+ 105:../src/DIO_program.c **** 		break;
+ 106:../src/DIO_program.c **** 		case GPIOB:
+ 107:../src/DIO_program.c **** 		GPIOB_ODR |= copy_u8Value << copy_u8Pin;
+ 108:../src/DIO_program.c **** 		break;
+ 109:../src/DIO_program.c **** 		case GPIOC:
+ 110:../src/DIO_program.c **** 		GPIOC_ODR |= copy_u8Value << copy_u8Pin;
+ 111:../src/DIO_program.c **** 		break;
+ 112:../src/DIO_program.c **** 		//default: // return error 
+ 113:../src/DIO_program.c **** 		*/
+ 114:../src/DIO_program.c **** 		
+ 115:../src/DIO_program.c **** 	}
+ 116:../src/DIO_program.c **** }
+ 265              		.loc 1 116 0
+ 266 0058 7047     		bx	lr
+ 267              	.LVL33:
+ 268              	.L25:
+  94:../src/DIO_program.c **** 			}
+ 269              		.loc 1 94 0
+ 270 005a 0123     		movs	r3, #1
+ 271 005c 03FA01F1 		lsl	r1, r3, r1
+ 272              	.LVL34:
+ 273 0060 064B     		ldr	r3, .L26+20
+ 274 0062 1960     		str	r1, [r3]
+ 275 0064 7047     		bx	lr
+ 276              	.L27:
+ 277 0066 00BF     		.align	2
+ 278              	.L26:
+ 279 0068 14080140 		.word	1073809428
+ 280 006c 10080140 		.word	1073809424
+ 281 0070 140C0140 		.word	1073810452
+ 282 0074 100C0140 		.word	1073810448
+ 283 0078 14100140 		.word	1073811476
+ 284 007c 10100140 		.word	1073811472
+ 285              		.cfi_endproc
+ 286              	.LFE1:
+ 288              		.section	.text.GPIO_u8GetPinValue,"ax",%progbits
+ 289              		.align	1
+ 290              		.global	GPIO_u8GetPinValue
+ 291              		.syntax unified
+ 292              		.thumb
+ 293              		.thumb_func
+ 294              		.fpu softvfp
+ 296              	GPIO_u8GetPinValue:
+ 297              	.LFB2:
+ 117:../src/DIO_program.c **** 
+ 118:../src/DIO_program.c **** u8 GPIO_u8GetPinValue(u8 copy_u8Port,u8 copy_u8Pin)
+ 119:../src/DIO_program.c **** {
+ 298              		.loc 1 119 0
+ 299              		.cfi_startproc
+ 300              		@ args = 0, pretend = 0, frame = 0
+ 301              		@ frame_needed = 0, uses_anonymous_args = 0
+ 302              		@ link register save eliminated.
+ 303              	.LVL35:
+ 120:../src/DIO_program.c **** 	u8 LOC_u8Result = 0;
+ 121:../src/DIO_program.c **** 	switch(copy_u8Port)
+ 304              		.loc 1 121 0
+ 305 0000 0128     		cmp	r0, #1
+ 306 0002 0AD0     		beq	.L30
+ 307 0004 18B1     		cbz	r0, .L31
+ 308 0006 0228     		cmp	r0, #2
+ 309 0008 0DD0     		beq	.L32
+ 120:../src/DIO_program.c **** 	u8 LOC_u8Result = 0;
+ 310              		.loc 1 120 0
+ 311 000a 0020     		movs	r0, #0
+ 312              	.LVL36:
+ 122:../src/DIO_program.c **** 	{
+ 123:../src/DIO_program.c **** 	    case GPIOA:
+ 124:../src/DIO_program.c **** 		    LOC_u8Result = GET_BIT(GPIOA_IDR,copy_u8Pin);
+ 125:../src/DIO_program.c **** 		    break;
+ 126:../src/DIO_program.c **** 		case GPIOB:
+ 127:../src/DIO_program.c **** 			LOC_u8Result = GET_BIT(GPIOB_IDR,copy_u8Pin);
+ 128:../src/DIO_program.c **** 			break;
+ 129:../src/DIO_program.c **** 		case GPIOC:
+ 130:../src/DIO_program.c **** 			LOC_u8Result = GET_BIT(GPIOC_IDR,copy_u8Pin);
+ 131:../src/DIO_program.c **** 			break;
+ 132:../src/DIO_program.c **** 		//default: /* return error */
+ 133:../src/DIO_program.c **** 	}
+ 134:../src/DIO_program.c **** 	return LOC_u8Result;
+ 135:../src/DIO_program.c **** }
+ 313              		.loc 1 135 0
+ 314 000c 7047     		bx	lr
+ 315              	.LVL37:
+ 316              	.L31:
+ 124:../src/DIO_program.c **** 		    break;
+ 317              		.loc 1 124 0
+ 318 000e 094B     		ldr	r3, .L35
+ 319 0010 1868     		ldr	r0, [r3]
+ 320              	.LVL38:
+ 321 0012 C840     		lsrs	r0, r0, r1
+ 322 0014 00F00100 		and	r0, r0, #1
+ 323              	.LVL39:
+ 125:../src/DIO_program.c **** 		case GPIOB:
+ 324              		.loc 1 125 0
+ 325 0018 7047     		bx	lr
+ 326              	.LVL40:
+ 327              	.L30:
+ 127:../src/DIO_program.c **** 			break;
+ 328              		.loc 1 127 0
+ 329 001a 074B     		ldr	r3, .L35+4
+ 330 001c 1868     		ldr	r0, [r3]
+ 331              	.LVL41:
+ 332 001e C840     		lsrs	r0, r0, r1
+ 333 0020 00F00100 		and	r0, r0, #1
+ 334              	.LVL42:
+ 128:../src/DIO_program.c **** 		case GPIOC:
+ 335              		.loc 1 128 0
+ 336 0024 7047     		bx	lr
+ 337              	.LVL43:
+ 338              	.L32:
+ 130:../src/DIO_program.c **** 			break;
+ 339              		.loc 1 130 0
+ 340 0026 054B     		ldr	r3, .L35+8
+ 341 0028 1868     		ldr	r0, [r3]
+ 342              	.LVL44:
+ 343 002a C840     		lsrs	r0, r0, r1
+ 344 002c 00F00100 		and	r0, r0, #1
+ 345              	.LVL45:
+ 131:../src/DIO_program.c **** 		//default: /* return error */
+ 346              		.loc 1 131 0
+ 347 0030 7047     		bx	lr
+ 348              	.L36:
+ 349 0032 00BF     		.align	2
+ 350              	.L35:
+ 351 0034 08080140 		.word	1073809416
+ 352 0038 080C0140 		.word	1073810440
+ 353 003c 08100140 		.word	1073811464
+ 354              		.cfi_endproc
+ 355              	.LFE2:
+ 357              		.text
+ 358              	.Letext0:
+ 359              		.file 2 "../include/STD_TYPES.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 DIO_program.c
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:16     .text.GPIO_voidSetPinDir:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:23     .text.GPIO_voidSetPinDir:00000000 GPIO_voidSetPinDir
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:174    .text.GPIO_voidSetPinDir:000000cc $d
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:184    .text.GPIO_voidSetPinValue:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:191    .text.GPIO_voidSetPinValue:00000000 GPIO_voidSetPinValue
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:279    .text.GPIO_voidSetPinValue:00000068 $d
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:289    .text.GPIO_u8GetPinValue:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:296    .text.GPIO_u8GetPinValue:00000000 GPIO_u8GetPinValue
+C:\Users\george\AppData\Local\Temp\ccwDSwPj.s:351    .text.GPIO_u8GetPinValue:00000034 $d
+                           .group:00000000 wm4.0.c450a18b2a29049e2cbb4137d58ca9b1
+                           .group:00000000 wm4.BIT_MATH.h.7.8c067faa1c2a78484709e69a816ceacc
+                           .group:00000000 wm4.DIO_interface.h.8.fbe9ea27b8543d290af36fcd61a0ab8b
+                           .group:00000000 wm4.DIO_private.h.8.ae3ae2b7aee675e2b407695693b0e247
+
+NO UNDEFINED SYMBOLS

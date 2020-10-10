@@ -1,0 +1,505 @@
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"STK_program.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.SysTick_Handler,"ax",%progbits
+  16              		.align	1
+  17              		.global	SysTick_Handler
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	SysTick_Handler:
+  24              	.LFB0:
+  25              		.file 1 "../src/STK_program.c"
+   1:../src/STK_program.c **** /*****************************************************************************************/
+   2:../src/STK_program.c **** /* Author : George Ghoubrial                                                             */
+   3:../src/STK_program.c **** /* Date   : 30 AUG 2020                                                                  */
+   4:../src/STK_program.c **** /* Verson : V01                                                                          */
+   5:../src/STK_program.c **** /*****************************************************************************************/
+   6:../src/STK_program.c **** #include "STD_TYPES.h"
+   7:../src/STK_program.c **** #include "BIT_MATH.h"
+   8:../src/STK_program.c **** 
+   9:../src/STK_program.c **** #include "STK_interface.h"
+  10:../src/STK_program.c **** #include "STK_private.h"
+  11:../src/STK_program.c **** #include "STK_config.h"
+  12:../src/STK_program.c **** 
+  13:../src/STK_program.c **** #define NULL (void*)0
+  14:../src/STK_program.c **** 
+  15:../src/STK_program.c **** static void (*STK_callback)(void) = NULL;
+  16:../src/STK_program.c **** 
+  17:../src/STK_program.c **** static u8 STK_u8intervalMode;
+  18:../src/STK_program.c **** 
+  19:../src/STK_program.c **** void SysTick_Handler(void)
+  20:../src/STK_program.c **** {
+  26              		.loc 1 20 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 08B5     		push	{r3, lr}
+  31              		.cfi_def_cfa_offset 8
+  32              		.cfi_offset 3, -8
+  33              		.cfi_offset 14, -4
+  21:../src/STK_program.c **** 	u8 Local_u8Temp;
+  22:../src/STK_program.c **** 	if(STK_u8intervalMode == STK_SINGLE_INTERVAL)
+  34              		.loc 1 22 0
+  35 0002 0C4B     		ldr	r3, .L6
+  36 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  37 0006 012B     		cmp	r3, #1
+  38 0008 06D0     		beq	.L5
+  39              	.L2:
+  23:../src/STK_program.c **** 	{
+  24:../src/STK_program.c **** 		/* disable SysTick */
+  25:../src/STK_program.c **** 		CLEAR_BIT(STK_CTRL,STK_ENABLE);  
+  26:../src/STK_program.c **** 		CLEAR_BIT(STK_CTRL,STK_TICKINT); /* disable interrupt because if it active and use busywait funct
+  27:../src/STK_program.c **** 		STK_VALUE = 0;					 /* clear value reg & clear flag bit */
+  28:../src/STK_program.c **** 
+  29:../src/STK_program.c **** 	}
+  30:../src/STK_program.c **** 
+  31:../src/STK_program.c **** 	if(STK_callback != NULL)
+  40              		.loc 1 31 0
+  41 000a 0B4B     		ldr	r3, .L6+4
+  42 000c 1B68     		ldr	r3, [r3]
+  43 000e 13B1     		cbz	r3, .L1
+  32:../src/STK_program.c **** 	{
+  33:../src/STK_program.c **** 		/* call of callback function */
+  34:../src/STK_program.c **** 		STK_callback();
+  44              		.loc 1 34 0
+  45 0010 9847     		blx	r3
+  46              	.LVL0:
+  35:../src/STK_program.c **** 		/* clear flag */
+  36:../src/STK_program.c **** 		Local_u8Temp = GET_BIT(STK_CTRL,STK_COUNTFLAG);
+  47              		.loc 1 36 0
+  48 0012 0A4B     		ldr	r3, .L6+8
+  49 0014 1B68     		ldr	r3, [r3]
+  50              	.LVL1:
+  51              	.L1:
+  37:../src/STK_program.c **** 	}
+  38:../src/STK_program.c **** }
+  52              		.loc 1 38 0
+  53 0016 08BD     		pop	{r3, pc}
+  54              	.L5:
+  25:../src/STK_program.c **** 		CLEAR_BIT(STK_CTRL,STK_TICKINT); /* disable interrupt because if it active and use busywait funct
+  55              		.loc 1 25 0
+  56 0018 084B     		ldr	r3, .L6+8
+  57 001a 1A68     		ldr	r2, [r3]
+  58 001c 22F00102 		bic	r2, r2, #1
+  59 0020 1A60     		str	r2, [r3]
+  26:../src/STK_program.c **** 		STK_VALUE = 0;					 /* clear value reg & clear flag bit */
+  60              		.loc 1 26 0
+  61 0022 1A68     		ldr	r2, [r3]
+  62 0024 22F00202 		bic	r2, r2, #2
+  63 0028 1A60     		str	r2, [r3]
+  27:../src/STK_program.c **** 
+  64              		.loc 1 27 0
+  65 002a 0833     		adds	r3, r3, #8
+  66 002c 0022     		movs	r2, #0
+  67 002e 1A60     		str	r2, [r3]
+  68 0030 EBE7     		b	.L2
+  69              	.L7:
+  70 0032 00BF     		.align	2
+  71              	.L6:
+  72 0034 00000000 		.word	.LANCHOR0
+  73 0038 00000000 		.word	.LANCHOR1
+  74 003c 10E000E0 		.word	-536813552
+  75              		.cfi_endproc
+  76              	.LFE0:
+  78              		.section	.text.STK_voidInit,"ax",%progbits
+  79              		.align	1
+  80              		.global	STK_voidInit
+  81              		.syntax unified
+  82              		.thumb
+  83              		.thumb_func
+  84              		.fpu softvfp
+  86              	STK_voidInit:
+  87              	.LFB1:
+  39:../src/STK_program.c **** 
+  40:../src/STK_program.c **** 
+  41:../src/STK_program.c **** void STK_voidInit(void)
+  42:../src/STK_program.c **** {
+  88              		.loc 1 42 0
+  89              		.cfi_startproc
+  90              		@ args = 0, pretend = 0, frame = 0
+  91              		@ frame_needed = 0, uses_anonymous_args = 0
+  92              		@ link register save eliminated.
+  43:../src/STK_program.c **** 	STK_CTRL = STK_CLK_SRS << 2;   /* set configuration clock AHB or AHB/8 */
+  93              		.loc 1 43 0
+  94 0000 014B     		ldr	r3, .L9
+  95 0002 0022     		movs	r2, #0
+  96 0004 1A60     		str	r2, [r3]
+  44:../src/STK_program.c **** }
+  97              		.loc 1 44 0
+  98 0006 7047     		bx	lr
+  99              	.L10:
+ 100              		.align	2
+ 101              	.L9:
+ 102 0008 10E000E0 		.word	-536813552
+ 103              		.cfi_endproc
+ 104              	.LFE1:
+ 106              		.section	.text.STK_voidSetBusyWait,"ax",%progbits
+ 107              		.align	1
+ 108              		.global	STK_voidSetBusyWait
+ 109              		.syntax unified
+ 110              		.thumb
+ 111              		.thumb_func
+ 112              		.fpu softvfp
+ 114              	STK_voidSetBusyWait:
+ 115              	.LFB2:
+  45:../src/STK_program.c **** 
+  46:../src/STK_program.c **** 
+  47:../src/STK_program.c **** void STK_voidSetBusyWait(u32 copy_u32Ticks)
+  48:../src/STK_program.c **** {
+ 116              		.loc 1 48 0
+ 117              		.cfi_startproc
+ 118              		@ args = 0, pretend = 0, frame = 0
+ 119              		@ frame_needed = 0, uses_anonymous_args = 0
+ 120              		@ link register save eliminated.
+ 121              	.LVL2:
+  49:../src/STK_program.c **** 	/* disable SysTick */
+  50:../src/STK_program.c **** 	CLEAR_BIT(STK_CTRL,STK_ENABLE);  
+ 122              		.loc 1 50 0
+ 123 0000 0F4B     		ldr	r3, .L13
+ 124 0002 1A68     		ldr	r2, [r3]
+ 125 0004 22F00102 		bic	r2, r2, #1
+ 126 0008 1A60     		str	r2, [r3]
+  51:../src/STK_program.c **** 	CLEAR_BIT(STK_CTRL,STK_TICKINT); /* disable STK interrupt */
+ 127              		.loc 1 51 0
+ 128 000a 1A68     		ldr	r2, [r3]
+ 129 000c 22F00202 		bic	r2, r2, #2
+ 130 0010 1A60     		str	r2, [r3]
+  52:../src/STK_program.c **** 	STK_VALUE = 0;
+ 131              		.loc 1 52 0
+ 132 0012 0C4A     		ldr	r2, .L13+4
+ 133 0014 0021     		movs	r1, #0
+ 134 0016 1160     		str	r1, [r2]
+  53:../src/STK_program.c **** 
+  54:../src/STK_program.c **** 	/* Load ticks to load register */
+  55:../src/STK_program.c **** 	STK_LOAD = copy_u32Ticks;
+ 135              		.loc 1 55 0
+ 136 0018 043A     		subs	r2, r2, #4
+ 137 001a 1060     		str	r0, [r2]
+  56:../src/STK_program.c **** 
+  57:../src/STK_program.c **** 	/* Enable SysTick */
+  58:../src/STK_program.c **** 	SET_BIT(STK_CTRL,STK_ENABLE);    
+ 138              		.loc 1 58 0
+ 139 001c 1A68     		ldr	r2, [r3]
+ 140 001e 42F00102 		orr	r2, r2, #1
+ 141 0022 1A60     		str	r2, [r3]
+ 142              	.L12:
+  59:../src/STK_program.c **** 	while(GET_BIT(STK_CTRL , STK_COUNTFLAG) == 0);  /* busy wait */
+ 143              		.loc 1 59 0 discriminator 1
+ 144 0024 064B     		ldr	r3, .L13
+ 145 0026 1B68     		ldr	r3, [r3]
+ 146 0028 13F4803F 		tst	r3, #65536
+ 147 002c FAD0     		beq	.L12
+  60:../src/STK_program.c **** 
+  61:../src/STK_program.c **** 	/* disable SysTick */
+  62:../src/STK_program.c **** 	CLEAR_BIT(STK_CTRL,STK_ENABLE);  
+ 148              		.loc 1 62 0
+ 149 002e 044A     		ldr	r2, .L13
+ 150 0030 1368     		ldr	r3, [r2]
+ 151 0032 23F00103 		bic	r3, r3, #1
+ 152 0036 1360     		str	r3, [r2]
+  63:../src/STK_program.c **** 	STK_VALUE = 0;     		 /* claer value register then will automatic reset flag*/
+ 153              		.loc 1 63 0
+ 154 0038 024B     		ldr	r3, .L13+4
+ 155 003a 0022     		movs	r2, #0
+ 156 003c 1A60     		str	r2, [r3]
+  64:../src/STK_program.c **** }
+ 157              		.loc 1 64 0
+ 158 003e 7047     		bx	lr
+ 159              	.L14:
+ 160              		.align	2
+ 161              	.L13:
+ 162 0040 10E000E0 		.word	-536813552
+ 163 0044 18E000E0 		.word	-536813544
+ 164              		.cfi_endproc
+ 165              	.LFE2:
+ 167              		.section	.text.STK_voidSetIntervalSingle,"ax",%progbits
+ 168              		.align	1
+ 169              		.global	STK_voidSetIntervalSingle
+ 170              		.syntax unified
+ 171              		.thumb
+ 172              		.thumb_func
+ 173              		.fpu softvfp
+ 175              	STK_voidSetIntervalSingle:
+ 176              	.LFB3:
+  65:../src/STK_program.c **** 
+  66:../src/STK_program.c **** void STK_voidSetIntervalSingle(u32 copy_u32Tick)
+  67:../src/STK_program.c **** {
+ 177              		.loc 1 67 0
+ 178              		.cfi_startproc
+ 179              		@ args = 0, pretend = 0, frame = 0
+ 180              		@ frame_needed = 0, uses_anonymous_args = 0
+ 181              		@ link register save eliminated.
+ 182              	.LVL3:
+  68:../src/STK_program.c **** 	/* disable SysTick */
+  69:../src/STK_program.c **** 	CLEAR_BIT(STK_CTRL,STK_ENABLE);  
+ 183              		.loc 1 69 0
+ 184 0000 0A4B     		ldr	r3, .L16
+ 185 0002 1A68     		ldr	r2, [r3]
+ 186 0004 22F00102 		bic	r2, r2, #1
+ 187 0008 1A60     		str	r2, [r3]
+  70:../src/STK_program.c **** 	STK_VALUE = 0;
+ 188              		.loc 1 70 0
+ 189 000a 094A     		ldr	r2, .L16+4
+ 190 000c 0021     		movs	r1, #0
+ 191 000e 1160     		str	r1, [r2]
+  71:../src/STK_program.c **** 
+  72:../src/STK_program.c **** 	/* load ticks to load register */
+  73:../src/STK_program.c **** 	STK_LOAD = copy_u32Tick;
+ 192              		.loc 1 73 0
+ 193 0010 043A     		subs	r2, r2, #4
+ 194 0012 1060     		str	r0, [r2]
+  74:../src/STK_program.c **** 
+  75:../src/STK_program.c **** 	/* Enable STK interrupt */
+  76:../src/STK_program.c **** 	SET_BIT(STK_CTRL,STK_TICKINT);
+ 195              		.loc 1 76 0
+ 196 0014 1A68     		ldr	r2, [r3]
+ 197 0016 42F00202 		orr	r2, r2, #2
+ 198 001a 1A60     		str	r2, [r3]
+  77:../src/STK_program.c **** 
+  78:../src/STK_program.c **** 	/* select mode */
+  79:../src/STK_program.c **** 	STK_u8intervalMode = STK_SINGLE_INTERVAL;
+ 199              		.loc 1 79 0
+ 200 001c 054A     		ldr	r2, .L16+8
+ 201 001e 0121     		movs	r1, #1
+ 202 0020 1170     		strb	r1, [r2]
+  80:../src/STK_program.c **** 
+  81:../src/STK_program.c **** 	/* Enable SysTick */
+  82:../src/STK_program.c **** 	SET_BIT(STK_CTRL,STK_ENABLE);
+ 203              		.loc 1 82 0
+ 204 0022 1A68     		ldr	r2, [r3]
+ 205 0024 0A43     		orrs	r2, r2, r1
+ 206 0026 1A60     		str	r2, [r3]
+  83:../src/STK_program.c **** 
+  84:../src/STK_program.c **** }
+ 207              		.loc 1 84 0
+ 208 0028 7047     		bx	lr
+ 209              	.L17:
+ 210 002a 00BF     		.align	2
+ 211              	.L16:
+ 212 002c 10E000E0 		.word	-536813552
+ 213 0030 18E000E0 		.word	-536813544
+ 214 0034 00000000 		.word	.LANCHOR0
+ 215              		.cfi_endproc
+ 216              	.LFE3:
+ 218              		.section	.text.STK_voidSetIntervalPeriodic,"ax",%progbits
+ 219              		.align	1
+ 220              		.global	STK_voidSetIntervalPeriodic
+ 221              		.syntax unified
+ 222              		.thumb
+ 223              		.thumb_func
+ 224              		.fpu softvfp
+ 226              	STK_voidSetIntervalPeriodic:
+ 227              	.LFB4:
+  85:../src/STK_program.c **** 
+  86:../src/STK_program.c **** void STK_voidSetIntervalPeriodic(u32 copy_u32Tick)
+  87:../src/STK_program.c **** {
+ 228              		.loc 1 87 0
+ 229              		.cfi_startproc
+ 230              		@ args = 0, pretend = 0, frame = 0
+ 231              		@ frame_needed = 0, uses_anonymous_args = 0
+ 232              		@ link register save eliminated.
+ 233              	.LVL4:
+  88:../src/STK_program.c **** 	/* disable SysTick */
+  89:../src/STK_program.c **** 	CLEAR_BIT(STK_CTRL,STK_ENABLE);  
+ 234              		.loc 1 89 0
+ 235 0000 0A4B     		ldr	r3, .L19
+ 236 0002 1A68     		ldr	r2, [r3]
+ 237 0004 22F00102 		bic	r2, r2, #1
+ 238 0008 1A60     		str	r2, [r3]
+  90:../src/STK_program.c **** 	STK_VALUE = 0;
+ 239              		.loc 1 90 0
+ 240 000a 0021     		movs	r1, #0
+ 241 000c 084A     		ldr	r2, .L19+4
+ 242 000e 1160     		str	r1, [r2]
+  91:../src/STK_program.c **** 
+  92:../src/STK_program.c **** 	/* load ticks to load register */
+  93:../src/STK_program.c **** 	STK_LOAD = copy_u32Tick;
+ 243              		.loc 1 93 0
+ 244 0010 043A     		subs	r2, r2, #4
+ 245 0012 1060     		str	r0, [r2]
+  94:../src/STK_program.c **** 
+  95:../src/STK_program.c **** 	/* Enable STK interrupt */
+  96:../src/STK_program.c **** 	SET_BIT(STK_CTRL,STK_TICKINT);
+ 246              		.loc 1 96 0
+ 247 0014 1A68     		ldr	r2, [r3]
+ 248 0016 42F00202 		orr	r2, r2, #2
+ 249 001a 1A60     		str	r2, [r3]
+  97:../src/STK_program.c **** 
+  98:../src/STK_program.c **** 	/* select mode */
+  99:../src/STK_program.c **** 	STK_u8intervalMode = STK_PERIODIC_INTERVAL;
+ 250              		.loc 1 99 0
+ 251 001c 054A     		ldr	r2, .L19+8
+ 252 001e 1170     		strb	r1, [r2]
+ 100:../src/STK_program.c **** 
+ 101:../src/STK_program.c **** 	/* Enable SysTick */
+ 102:../src/STK_program.c **** 	SET_BIT(STK_CTRL,STK_ENABLE);
+ 253              		.loc 1 102 0
+ 254 0020 1A68     		ldr	r2, [r3]
+ 255 0022 42F00102 		orr	r2, r2, #1
+ 256 0026 1A60     		str	r2, [r3]
+ 103:../src/STK_program.c **** }
+ 257              		.loc 1 103 0
+ 258 0028 7047     		bx	lr
+ 259              	.L20:
+ 260 002a 00BF     		.align	2
+ 261              	.L19:
+ 262 002c 10E000E0 		.word	-536813552
+ 263 0030 18E000E0 		.word	-536813544
+ 264 0034 00000000 		.word	.LANCHOR0
+ 265              		.cfi_endproc
+ 266              	.LFE4:
+ 268              		.section	.text.STK_voidSetCallBack,"ax",%progbits
+ 269              		.align	1
+ 270              		.global	STK_voidSetCallBack
+ 271              		.syntax unified
+ 272              		.thumb
+ 273              		.thumb_func
+ 274              		.fpu softvfp
+ 276              	STK_voidSetCallBack:
+ 277              	.LFB5:
+ 104:../src/STK_program.c **** 
+ 105:../src/STK_program.c **** void STK_voidSetCallBack( void(*ptr)(void) )
+ 106:../src/STK_program.c **** {
+ 278              		.loc 1 106 0
+ 279              		.cfi_startproc
+ 280              		@ args = 0, pretend = 0, frame = 0
+ 281              		@ frame_needed = 0, uses_anonymous_args = 0
+ 282              		@ link register save eliminated.
+ 283              	.LVL5:
+ 107:../src/STK_program.c **** 	STK_callback= ptr;
+ 284              		.loc 1 107 0
+ 285 0000 014B     		ldr	r3, .L22
+ 286 0002 1860     		str	r0, [r3]
+ 108:../src/STK_program.c **** }
+ 287              		.loc 1 108 0
+ 288 0004 7047     		bx	lr
+ 289              	.L23:
+ 290 0006 00BF     		.align	2
+ 291              	.L22:
+ 292 0008 00000000 		.word	.LANCHOR1
+ 293              		.cfi_endproc
+ 294              	.LFE5:
+ 296              		.section	.text.STK_u32GetConsumedTime,"ax",%progbits
+ 297              		.align	1
+ 298              		.global	STK_u32GetConsumedTime
+ 299              		.syntax unified
+ 300              		.thumb
+ 301              		.thumb_func
+ 302              		.fpu softvfp
+ 304              	STK_u32GetConsumedTime:
+ 305              	.LFB6:
+ 109:../src/STK_program.c **** 
+ 110:../src/STK_program.c **** u32 STK_u32GetConsumedTime(void)
+ 111:../src/STK_program.c **** {
+ 306              		.loc 1 111 0
+ 307              		.cfi_startproc
+ 308              		@ args = 0, pretend = 0, frame = 0
+ 309              		@ frame_needed = 0, uses_anonymous_args = 0
+ 310              		@ link register save eliminated.
+ 112:../src/STK_program.c **** 	return STK_LOAD - STK_VALUE;
+ 311              		.loc 1 112 0
+ 312 0000 024B     		ldr	r3, .L25
+ 313 0002 1868     		ldr	r0, [r3]
+ 314 0004 0433     		adds	r3, r3, #4
+ 315 0006 1B68     		ldr	r3, [r3]
+ 113:../src/STK_program.c **** }
+ 316              		.loc 1 113 0
+ 317 0008 C01A     		subs	r0, r0, r3
+ 318 000a 7047     		bx	lr
+ 319              	.L26:
+ 320              		.align	2
+ 321              	.L25:
+ 322 000c 14E000E0 		.word	-536813548
+ 323              		.cfi_endproc
+ 324              	.LFE6:
+ 326              		.section	.text.STK_u32GetRemainingTime,"ax",%progbits
+ 327              		.align	1
+ 328              		.global	STK_u32GetRemainingTime
+ 329              		.syntax unified
+ 330              		.thumb
+ 331              		.thumb_func
+ 332              		.fpu softvfp
+ 334              	STK_u32GetRemainingTime:
+ 335              	.LFB7:
+ 114:../src/STK_program.c **** 
+ 115:../src/STK_program.c **** u32 STK_u32GetRemainingTime(void)
+ 116:../src/STK_program.c **** {
+ 336              		.loc 1 116 0
+ 337              		.cfi_startproc
+ 338              		@ args = 0, pretend = 0, frame = 0
+ 339              		@ frame_needed = 0, uses_anonymous_args = 0
+ 340              		@ link register save eliminated.
+ 117:../src/STK_program.c **** 	return  STK_VALUE;
+ 341              		.loc 1 117 0
+ 342 0000 014B     		ldr	r3, .L28
+ 343 0002 1868     		ldr	r0, [r3]
+ 118:../src/STK_program.c **** }
+ 344              		.loc 1 118 0
+ 345 0004 7047     		bx	lr
+ 346              	.L29:
+ 347 0006 00BF     		.align	2
+ 348              	.L28:
+ 349 0008 18E000E0 		.word	-536813544
+ 350              		.cfi_endproc
+ 351              	.LFE7:
+ 353              		.section	.bss.STK_callback,"aw",%nobits
+ 354              		.align	2
+ 355              		.set	.LANCHOR1,. + 0
+ 358              	STK_callback:
+ 359 0000 00000000 		.space	4
+ 360              		.section	.bss.STK_u8intervalMode,"aw",%nobits
+ 361              		.set	.LANCHOR0,. + 0
+ 364              	STK_u8intervalMode:
+ 365 0000 00       		.space	1
+ 366              		.text
+ 367              	.Letext0:
+ 368              		.file 2 "../include/STD_TYPES.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 STK_program.c
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:16     .text.SysTick_Handler:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:23     .text.SysTick_Handler:00000000 SysTick_Handler
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:72     .text.SysTick_Handler:00000034 $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:79     .text.STK_voidInit:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:86     .text.STK_voidInit:00000000 STK_voidInit
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:102    .text.STK_voidInit:00000008 $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:107    .text.STK_voidSetBusyWait:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:114    .text.STK_voidSetBusyWait:00000000 STK_voidSetBusyWait
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:162    .text.STK_voidSetBusyWait:00000040 $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:168    .text.STK_voidSetIntervalSingle:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:175    .text.STK_voidSetIntervalSingle:00000000 STK_voidSetIntervalSingle
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:212    .text.STK_voidSetIntervalSingle:0000002c $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:219    .text.STK_voidSetIntervalPeriodic:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:226    .text.STK_voidSetIntervalPeriodic:00000000 STK_voidSetIntervalPeriodic
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:262    .text.STK_voidSetIntervalPeriodic:0000002c $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:269    .text.STK_voidSetCallBack:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:276    .text.STK_voidSetCallBack:00000000 STK_voidSetCallBack
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:292    .text.STK_voidSetCallBack:00000008 $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:297    .text.STK_u32GetConsumedTime:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:304    .text.STK_u32GetConsumedTime:00000000 STK_u32GetConsumedTime
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:322    .text.STK_u32GetConsumedTime:0000000c $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:327    .text.STK_u32GetRemainingTime:00000000 $t
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:334    .text.STK_u32GetRemainingTime:00000000 STK_u32GetRemainingTime
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:349    .text.STK_u32GetRemainingTime:00000008 $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:354    .bss.STK_callback:00000000 $d
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:358    .bss.STK_callback:00000000 STK_callback
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:364    .bss.STK_u8intervalMode:00000000 STK_u8intervalMode
+C:\Users\george\AppData\Local\Temp\ccAojvVq.s:365    .bss.STK_u8intervalMode:00000000 $d
+                           .group:00000000 wm4.0.c450a18b2a29049e2cbb4137d58ca9b1
+                           .group:00000000 wm4.BIT_MATH.h.7.8c067faa1c2a78484709e69a816ceacc
+                           .group:00000000 wm4.STK_private.h.7.7d06a9f026a02fcef5f67d6b33597107
+                           .group:00000000 wm4.STK_config.h.7.5fa8dcf98a23e8d8081f18af8ecf9517
+
+NO UNDEFINED SYMBOLS

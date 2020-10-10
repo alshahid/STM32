@@ -1,0 +1,226 @@
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"main.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.main,"ax",%progbits
+  16              		.align	1
+  17              		.global	main
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	main:
+  24              	.LFB0:
+  25              		.file 1 "../src/main.c"
+   1:../src/main.c **** /*
+   2:../src/main.c ****  * main.c
+   3:../src/main.c ****  *
+   4:../src/main.c ****  *  Created on: Oct 3, 2020
+   5:../src/main.c ****  *      Author: george
+   6:../src/main.c ****  */
+   7:../src/main.c **** 
+   8:../src/main.c **** #include "STD_TYPES.h"
+   9:../src/main.c **** #include "BIT_MATH.h"
+  10:../src/main.c **** 
+  11:../src/main.c **** #include "RCC_interface.h"
+  12:../src/main.c **** #include "DIO_interface.h"
+  13:../src/main.c **** #include "STK_interface.h"
+  14:../src/main.c **** #include "USART_interface.h"
+  15:../src/main.c **** 
+  16:../src/main.c **** #include"ESP_interface.h"
+  17:../src/main.c **** 
+  18:../src/main.c **** void main(void)
+  19:../src/main.c **** {
+  26              		.loc 1 19 0
+  27              		.cfi_startproc
+  28              		@ Volatile: function does not return.
+  29              		@ args = 0, pretend = 0, frame = 48
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 00B5     		push	{lr}
+  32              		.cfi_def_cfa_offset 4
+  33              		.cfi_offset 14, -4
+  34 0002 8DB0     		sub	sp, sp, #52
+  35              		.cfi_def_cfa_offset 56
+  20:../src/main.c **** 
+  21:../src/main.c **** 	u8 data[47] = {0};
+  36              		.loc 1 21 0
+  37 0004 2F22     		movs	r2, #47
+  38 0006 0021     		movs	r1, #0
+  39 0008 6846     		mov	r0, sp
+  40 000a FFF7FEFF 		bl	memset
+  41              	.LVL0:
+  22:../src/main.c **** 	RCC_voidInitSysClock();
+  42              		.loc 1 22 0
+  43 000e FFF7FEFF 		bl	RCC_voidInitSysClock
+  44              	.LVL1:
+  23:../src/main.c **** 	RCC_voidEnableClock(RCC_APB2,2);  /* enable GPIOA */
+  45              		.loc 1 23 0
+  46 0012 0221     		movs	r1, #2
+  47 0014 0846     		mov	r0, r1
+  48 0016 FFF7FEFF 		bl	RCC_voidEnableClock
+  49              	.LVL2:
+  24:../src/main.c **** 	RCC_voidEnableClock(RCC_APB2,14); /* enable USART */
+  50              		.loc 1 24 0
+  51 001a 0E21     		movs	r1, #14
+  52 001c 0220     		movs	r0, #2
+  53 001e FFF7FEFF 		bl	RCC_voidEnableClock
+  54              	.LVL3:
+  25:../src/main.c **** 
+  26:../src/main.c **** 	GPIO_voidSetPinDir(GPIOA,PIN9,OUTPUT_2M_AF_PUSH_PULL);
+  55              		.loc 1 26 0
+  56 0022 0A22     		movs	r2, #10
+  57 0024 0921     		movs	r1, #9
+  58 0026 0020     		movs	r0, #0
+  59 0028 FFF7FEFF 		bl	GPIO_voidSetPinDir
+  60              	.LVL4:
+  27:../src/main.c **** 	GPIO_voidSetPinDir(GPIOA,PIN10,INPUT_FLOATING);
+  61              		.loc 1 27 0
+  62 002c 0422     		movs	r2, #4
+  63 002e 0A21     		movs	r1, #10
+  64 0030 0020     		movs	r0, #0
+  65 0032 FFF7FEFF 		bl	GPIO_voidSetPinDir
+  66              	.LVL5:
+  28:../src/main.c **** 	GPIO_voidSetPinDir(GPIOA,PIN2,OUTPUT_2M_PUSH_PULL);
+  67              		.loc 1 28 0
+  68 0036 0222     		movs	r2, #2
+  69 0038 1146     		mov	r1, r2
+  70 003a 0020     		movs	r0, #0
+  71 003c FFF7FEFF 		bl	GPIO_voidSetPinDir
+  72              	.LVL6:
+  29:../src/main.c **** 	STK_voidInit();
+  73              		.loc 1 29 0
+  74 0040 FFF7FEFF 		bl	STK_voidInit
+  75              	.LVL7:
+  30:../src/main.c **** 
+  31:../src/main.c **** 	USART1_voidInit();
+  76              		.loc 1 31 0
+  77 0044 FFF7FEFF 		bl	USART1_voidInit
+  78              	.LVL8:
+  32:../src/main.c **** 
+  33:../src/main.c **** 	ESP_voidInit();
+  79              		.loc 1 33 0
+  80 0048 FFF7FEFF 		bl	ESP_voidInit
+  81              	.LVL9:
+  34:../src/main.c **** 	ESP_voidConnectToWIFI("abc","gog12345");
+  82              		.loc 1 34 0
+  83 004c 0E49     		ldr	r1, .L7
+  84 004e 0F48     		ldr	r0, .L7+4
+  85 0050 FFF7FEFF 		bl	ESP_voidConnectToWIFI
+  86              	.LVL10:
+  87 0054 04E0     		b	.L2
+  88              	.L6:
+  35:../src/main.c **** 	//ESP_voidConnectToServer("162.253.155.227",data);
+  36:../src/main.c **** 
+  37:../src/main.c **** 
+  38:../src/main.c **** 
+  39:../src/main.c **** 	while(1)
+  40:../src/main.c **** 	{
+  41:../src/main.c **** 		ESP_voidConnectToServer("162.253.155.227",data);
+  42:../src/main.c **** 		STK_voidSetBusyWait(100000);
+  43:../src/main.c **** 
+  44:../src/main.c **** 		if(data[37] == '1')  /* 38 for no checking code */
+  45:../src/main.c **** 		{
+  46:../src/main.c **** 			GPIO_voidSetPinValue(GPIOA,PIN2,HIGH);
+  89              		.loc 1 46 0
+  90 0056 0122     		movs	r2, #1
+  91 0058 0221     		movs	r1, #2
+  92 005a 0020     		movs	r0, #0
+  93 005c FFF7FEFF 		bl	GPIO_voidSetPinValue
+  94              	.LVL11:
+  95              	.L2:
+  41:../src/main.c **** 		STK_voidSetBusyWait(100000);
+  96              		.loc 1 41 0
+  97 0060 6946     		mov	r1, sp
+  98 0062 0B48     		ldr	r0, .L7+8
+  99 0064 FFF7FEFF 		bl	ESP_voidConnectToServer
+ 100              	.LVL12:
+  42:../src/main.c **** 
+ 101              		.loc 1 42 0
+ 102 0068 0A48     		ldr	r0, .L7+12
+ 103 006a FFF7FEFF 		bl	STK_voidSetBusyWait
+ 104              	.LVL13:
+  44:../src/main.c **** 		{
+ 105              		.loc 1 44 0
+ 106 006e 9DF82530 		ldrb	r3, [sp, #37]	@ zero_extendqisi2
+ 107 0072 312B     		cmp	r3, #49
+ 108 0074 EFD0     		beq	.L6
+  47:../src/main.c **** 
+  48:../src/main.c **** 		}
+  49:../src/main.c **** 		else if(data[37] == '0') /* 38 for no checking code */
+ 109              		.loc 1 49 0
+ 110 0076 302B     		cmp	r3, #48
+ 111 0078 F2D1     		bne	.L2
+  50:../src/main.c **** 		{
+  51:../src/main.c **** 			GPIO_voidSetPinValue(GPIOA,PIN2,LOW);
+ 112              		.loc 1 51 0
+ 113 007a 0022     		movs	r2, #0
+ 114 007c 0221     		movs	r1, #2
+ 115 007e 1046     		mov	r0, r2
+ 116 0080 FFF7FEFF 		bl	GPIO_voidSetPinValue
+ 117              	.LVL14:
+ 118 0084 ECE7     		b	.L2
+ 119              	.L8:
+ 120 0086 00BF     		.align	2
+ 121              	.L7:
+ 122 0088 00000000 		.word	.LC0
+ 123 008c 0C000000 		.word	.LC1
+ 124 0090 10000000 		.word	.LC2
+ 125 0094 A0860100 		.word	100000
+ 126              		.cfi_endproc
+ 127              	.LFE0:
+ 129              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 130              		.align	2
+ 131              	.LC0:
+ 132 0000 676F6731 		.ascii	"gog12345\000"
+ 132      32333435 
+ 132      00
+ 133 0009 000000   		.space	3
+ 134              	.LC1:
+ 135 000c 61626300 		.ascii	"abc\000"
+ 136              	.LC2:
+ 137 0010 3136322E 		.ascii	"162.253.155.227\000"
+ 137      3235332E 
+ 137      3135352E 
+ 137      32323700 
+ 138              		.text
+ 139              	.Letext0:
+ 140              		.file 2 "../include/RCC_interface.h"
+ 141              		.file 3 "../include/DIO_interface.h"
+ 142              		.file 4 "../include/STK_interface.h"
+ 143              		.file 5 "../include/USART_interface.h"
+ 144              		.file 6 "../include/ESP_interface.h"
+ 145              		.file 7 "../include/STD_TYPES.h"
+ 146              		.file 8 "<built-in>"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\george\AppData\Local\Temp\cc9YbQMY.s:16     .text.main:00000000 $t
+C:\Users\george\AppData\Local\Temp\cc9YbQMY.s:23     .text.main:00000000 main
+C:\Users\george\AppData\Local\Temp\cc9YbQMY.s:122    .text.main:00000088 $d
+C:\Users\george\AppData\Local\Temp\cc9YbQMY.s:130    .rodata.main.str1.4:00000000 $d
+                           .group:00000000 wm4.0.c450a18b2a29049e2cbb4137d58ca9b1
+                           .group:00000000 wm4.BIT_MATH.h.7.8c067faa1c2a78484709e69a816ceacc
+                           .group:00000000 wm4.RCC_interface.h.7.04eb592d8fdb87e43a28c1c0a5b43a30
+                           .group:00000000 wm4.DIO_interface.h.8.fbe9ea27b8543d290af36fcd61a0ab8b
+
+UNDEFINED SYMBOLS
+memset
+RCC_voidInitSysClock
+RCC_voidEnableClock
+GPIO_voidSetPinDir
+STK_voidInit
+USART1_voidInit
+ESP_voidInit
+ESP_voidConnectToWIFI
+GPIO_voidSetPinValue
+ESP_voidConnectToServer
+STK_voidSetBusyWait
